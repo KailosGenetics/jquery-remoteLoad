@@ -1,6 +1,8 @@
 {
   "name": "jQuery Remote Load",
   "title": "jquery-remoteLoad.js",
+  "author": "Bryan Stone",
+  "homepage": "https://github.com/aegixx/jquery-remoteLoad",
   "description": "Plugin for loading HTML content from a remote source into any DOM element via AJAX.",
   "version": "1.0.0",
   "main": "jquery-remoteLoad.js",
@@ -9,12 +11,16 @@
     "**/.*",
     "test.html",
     "remote.html",
-    "*.md"
+    "*.md",
+    "bower.json"
   ],
   "keywords": [
     "ajax",
     "remote",
     "load",
     "jquery"
-  ]
+  ],
+  "dependencies": {
+    "jquery": "~1.7 || ~2"
+  }
 }

@@ -9,7 +9,7 @@ bower install aegixx/jquery-remoteLoad.js --save
 
 #### Default Usage
 ```html
-<div data-src="/remote-page.html"></div>
+<div data-src="remote-page.html"></div>
 ````
 
 ```javascript
