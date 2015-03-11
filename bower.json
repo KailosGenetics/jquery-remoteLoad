@@ -1,0 +1,20 @@
+{
+  "name": "jQuery Remote Load",
+  "title": "jquery-remoteLoad.js",
+  "description": "Plugin for loading HTML content from a remote source into any DOM element via AJAX.",
+  "version": "1.0.0",
+  "main": "jquery-remoteLoad.js",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "test.html",
+    "remote.html",
+    "*.md"
+  ],
+  "keywords": [
+    "ajax",
+    "remote",
+    "load",
+    "jquery"
+  ]
+}
