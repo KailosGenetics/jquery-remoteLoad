@@ -12,7 +12,8 @@
     "test.html",
     "remote.html",
     "*.md",
-    "bower.json"
+    "bower.json",
+    "package.json"
   ],
   "keywords": [
     "ajax",
