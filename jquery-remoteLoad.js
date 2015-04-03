@@ -9,22 +9,28 @@ jQuery.fn.extend({
 	remoteLoad: function(options) {
 		var targets = $(this);
 		var options = $.extend({
-			srcAttr: 'src',
-			loadingImgClass: 'loading-img',
-			errorImgClass: 'loading-error-img',
-			loadingClass: 'loading',
-			errorClass: 'loading-error',
-			loadingContent: '',
-			errorContent: '',
-			beforeSend: null,
-			success: null,
-			error: null,
-			complete: null
+			srcAttr: 'src',                         // Data attribute for remote src
+			loadedAttr: 'loaded',                   // Data attribute to use once loaded
+			loadingImgClass: 'loading-img',         // Class for loading image (empty span)
+			errorImgClass: 'loading-error-img',     // Class for error image (empty span)
+			loadingClass: 'loading',                // Class for loading content
+			errorClass: 'loading-error',            // Class for error content
+			errorContent: '',                       // HTML content to display while loading
+			loadingContent: '',                     // HTML content to display when an error occurs
+			beforeSend: null,                       // ajax:beforeSend Callback function
+			success: null,                          // ajax:success Callback function
+			error: null,                            // ajax:error Callback function
+			complete: null,                         // ajax:complete Callback function
+			force: false                            // Forces reload of data, even if it is already loaded
 		}, options);
 
 		this.each(function() {
 			var target = $(this);
 			var src = target.data(options.srcAttr);
+			// Skip if already loaded (unless force is enabled)
+			if (target.data(options.loadedAttr) && !options.force)
+				return true;
+
 			$.ajax({
 				url: src,
 				dataType: 'html',
@@ -39,6 +45,7 @@ jQuery.fn.extend({
 					if (typeof options.success == 'function')
 						options.success.call(target, data, status, xhr);
 					target.trigger('ajax:success');
+					target.data(options.loadedAttr, true);
 				},
 				error: function (xhr, status, error) {
 					target.addClass(options.errorClass).html('<span class="' + options.errorImgClass + '" aria-hidden="true"></span><span class="sr-only">Error!</span>' + options.errorContent)
@@ -60,22 +67,24 @@ jQuery.fn.extend({
 	remoteSubmit: function(options) {
 		var targets = $(this);
 		var options = $.extend({
-			targetAttr: 'target',
-			loadingImgClass: 'loading-img',
-			errorImgClass: 'loading-error-img',
-			loadingClass: 'loading',
-			errorClass: 'loading-error',
-			loadingContent: '',
-			errorContent: '',
-			beforeSend: null,
-			success: null,
-			error: null,
-			complete: null
+			target: null,                           // Forced element to use as a target for the response
+																							//   (takes precedence over targetAttr)
+			targetAttr: 'target',                   // Data attribute to examine for elements to update with form response
+			loadingImgClass: 'loading-img',         // Class for loading image (empty span)
+			errorImgClass: 'loading-error-img',     // Class for error image (empty span)
+			loadingClass: 'loading',                // Class for loading content
+			errorClass: 'loading-error',            // Class for error content
+			errorContent: '',                       // HTML content to display while loading
+			loadingContent: '',                     // HTML content to display when an error occurs
+			beforeSend: null,                       // ajax:beforeSend Callback function
+			success: null,                          // ajax:success Callback function
+			error: null,                            // ajax:error Callback function
+			complete: null                          // ajax:complete Callback function
 		}, options);
 
 		this.filter('form').each(function() {
 			var form = $(this);
-			var target = $($(this).data(options.targetAttr));
+			var target = options.target ? $(options.target) : $($(this).data(options.targetAttr));
 			var src = form.attr('action') || window.location.pathname;
 			var type = form.attr('method') || 'POST';
 
