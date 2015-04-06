@@ -98,26 +98,29 @@ jQuery.fn.extend({
 					data: form.serialize(),
 					beforeSend: function (xhr, settings) {
 						target.addClass(options.loadingClass).html('<span class="' + options.loadingImgClass + '" aria-hidden="true"></span><span class="sr-only">Loading...</span>' + options.loadingContent)
-						if (typeof options.beforeSend == 'function')
-							options.beforeSend.call(form, xhr, settings);
-						form.trigger('ajax:beforeSend');
+						if (typeof options.beforeSend == 'function') {
+							if (!options.beforeSend.call(form, xhr, settings))
+								return false;
+						}
+						if (!form.trigger('ajax:beforeSend'))
+							return false;
 					},
 					success: function (data, status, xhr) {
 						target.html(data);
 						if (typeof options.success == 'function')
-							options.success.call(form, data, status, xhr);
+							options.success.call(target, data, status, xhr);
 						form.trigger('ajax:success');
 					},
 					error: function (xhr, status, error) {
 						target.addClass(options.errorClass).html('<span class="' + options.errorImgClass + '" aria-hidden="true"></span><span class="sr-only">Error!</span>' + options.errorContent)
 						if (typeof options.error == 'function')
-							options.error.call(form, xhr, status, error);
+							options.error.call(target, xhr, status, error);
 						form.trigger('ajax:error');
 					},
 					complete: function(xhr, status) {
 						target.removeClass(options.loadingClass);
 						if (typeof options.complete == 'function')
-							options.complete.call(form, xhr, status);
+							options.complete.call(target, xhr, status);
 						form.trigger('ajax:complete');
 					}
 				});
