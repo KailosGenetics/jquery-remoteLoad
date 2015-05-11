@@ -14,7 +14,7 @@ jQuery.fn.extend({
 			loadingWrapper: 'loading-wrapper',      // Class for wrapper around loading content
 			loadingContent: ''                      // HTML content to display when an error occurs
 		}, options);
-		target.addClass(options.loadingClass).html('<div class="' + options.loadingWrapper + '"><span class="' + options.loadingImgClass + '" aria-hidden="true"></span><span class="sr-only">Loading...</span>' + options.loadingContent + '</div>')
+		target.addClass(options.loadingClass).prepend('<div class="' + options.loadingWrapper + '"><span class="' + options.loadingImgClass + '" aria-hidden="true"></span><span class="sr-only">Loading...</span>' + options.loadingContent + '</div>')
 	},
 	removeLoading: function (options) {
 		var target = $(this);

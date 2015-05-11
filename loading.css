@@ -49,6 +49,20 @@
   }
 }
 
+.loading {
+  position: relative;
+}
+
+.loading-wrapper {
+  background-color: #ccc;
+  opacity: 0.5;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
 .loading-img {
   -webkit-animation-duration: 0.75s;
   -moz-animation-duration: 0.75s;
