@@ -6,14 +6,33 @@
 
  */
 jQuery.fn.extend({
-	remoteLoad: function(options) {
+	addLoading: function (options) {
+		var target = $(this);
+		var options = $.extend({
+			loadingImgClass: 'loading-img',         // Class for loading image (empty span)
+			loadingClass: 'loading',                // Class for target when loading
+			loadingWrapper: 'loading-wrapper',      // Class for wrapper around loading content
+			loadingContent: ''                      // HTML content to display when an error occurs
+		}, options);
+		target.addClass(options.loadingClass).html('<div class="' + options.loadingWrapper + '"><span class="' + options.loadingImgClass + '" aria-hidden="true"></span><span class="sr-only">Loading...</span>' + options.loadingContent + '</div>')
+	},
+	removeLoading: function (options) {
+		var target = $(this);
+		var options = $.extend({
+			loadingClass: 'loading',                // Class for target when loading
+			loadingWrapper: 'loading-wrapper'       // Class for wrapper around loading content
+		}, options);
+		target.removeClass(options.loadingClass).find('.' + options.loadingWrapper).remove();
+	},
+	remoteLoad: function (options) {
 		var targets = $(this);
 		var options = $.extend({
 			srcAttr: 'src',                         // Data attribute for remote src
 			loadedAttr: 'loaded',                   // Data attribute to use once loaded
 			loadingImgClass: 'loading-img',         // Class for loading image (empty span)
 			errorImgClass: 'loading-error-img',     // Class for error image (empty span)
-			loadingClass: 'loading',                // Class for loading content
+			loadingClass: 'loading',                // Class for target when loading
+			loadingWrapper: 'loading-wrapper',      // Class for wrapper around loading content
 			errorClass: 'loading-error',            // Class for error content
 			errorContent: '',                       // HTML content to display while loading
 			loadingContent: '',                     // HTML content to display when an error occurs
@@ -24,7 +43,7 @@ jQuery.fn.extend({
 			force: false                            // Forces reload of data, even if it is already loaded
 		}, options);
 
-		this.each(function() {
+		this.each(function () {
 			var target = $(this);
 			var src = target.data(options.srcAttr);
 			// Skip if already loaded (unless force is enabled)
@@ -35,7 +54,7 @@ jQuery.fn.extend({
 				url: src,
 				dataType: 'html',
 				beforeSend: function (xhr, settings) {
-					target.addClass(options.loadingClass).html('<span class="' + options.loadingImgClass + '" aria-hidden="true"></span><span class="sr-only">Loading...</span>' + options.loadingContent)
+					target.addLoading(options);
 					if (typeof options.beforeSend == 'function')
 						options.beforeSend.call(target, xhr, settings);
 					target.trigger('ajax:beforeSend');
@@ -53,8 +72,8 @@ jQuery.fn.extend({
 						options.error.call(target, xhr, status, error);
 					target.trigger('ajax:error');
 				},
-				complete: function(xhr, status) {
-					target.removeClass(options.loadingClass);
+				complete: function (xhr, status) {
+					target.removeLoading(options);
 					if (typeof options.complete == 'function')
 						options.complete.call(target, xhr, status);
 					target.trigger('ajax:complete');
@@ -64,15 +83,16 @@ jQuery.fn.extend({
 
 		return targets; // Allow for chaining
 	},
-	remoteSubmit: function(options) {
+	remoteSubmit: function (options) {
 		var targets = $(this);
 		var options = $.extend({
 			target: null,                           // Forced element to use as a target for the response
-																							//   (takes precedence over targetAttr)
+		                                          //   (takes precedence over targetAttr)
 			targetAttr: 'target',                   // Data attribute to examine for elements to update with form response
 			loadingImgClass: 'loading-img',         // Class for loading image (empty span)
 			errorImgClass: 'loading-error-img',     // Class for error image (empty span)
-			loadingClass: 'loading',                // Class for loading content
+			loadingClass: 'loading',                // Class for target when loading
+			loadingWrapper: 'loading-wrapper',      // Class for wrapper around loading content
 			errorClass: 'loading-error',            // Class for error content
 			errorContent: '',                       // HTML content to display while loading
 			loadingContent: '',                     // HTML content to display when an error occurs
@@ -82,7 +102,7 @@ jQuery.fn.extend({
 			complete: null                          // ajax:complete Callback function
 		}, options);
 
-		this.filter('form').each(function() {
+		this.filter('form').each(function () {
 			var form = $(this);
 			var target = options.target ? $(options.target) : $($(this).data(options.targetAttr));
 			var src = form.attr('action') || window.location.pathname;
@@ -97,7 +117,7 @@ jQuery.fn.extend({
 					type: type,
 					data: form.serialize(),
 					beforeSend: function (xhr, settings) {
-						target.addClass(options.loadingClass).html('<span class="' + options.loadingImgClass + '" aria-hidden="true"></span><span class="sr-only">Loading...</span>' + options.loadingContent)
+						target.addLoading(options);
 						if (typeof options.beforeSend == 'function') {
 							if (!options.beforeSend.call(form, xhr, settings))
 								return false;
@@ -117,8 +137,8 @@ jQuery.fn.extend({
 							options.error.call(target, xhr, status, error);
 						form.trigger('ajax:error');
 					},
-					complete: function(xhr, status) {
-						target.removeClass(options.loadingClass);
+					complete: function (xhr, status) {
+						target.removeLoading(options);
 						if (typeof options.complete == 'function')
 							options.complete.call(target, xhr, status);
 						form.trigger('ajax:complete');
