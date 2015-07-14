@@ -117,13 +117,13 @@ jQuery.fn.extend({
 					type: type,
 					data: form.serialize(),
 					beforeSend: function (xhr, settings) {
-						target.addLoading(options);
 						if (typeof options.beforeSend == 'function') {
 							if (!options.beforeSend.call(form, xhr, settings))
 								return false;
 						}
 						if (!form.trigger('ajax:beforeSend'))
 							return false;
+						target.addLoading(options);
 					},
 					success: function (data, status, xhr) {
 						target.html(data);
