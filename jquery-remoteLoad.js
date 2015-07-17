@@ -40,7 +40,8 @@ jQuery.fn.extend({
 			success: null,                          // ajax:success Callback function
 			error: null,                            // ajax:error Callback function
 			complete: null,                         // ajax:complete Callback function
-			force: false                            // Forces reload of data, even if it is already loaded
+			force: false,                           // Forces reload of data, even if it is already loaded
+      dataType: 'html'                        // Force a specific dataType
 		}, options);
 
 		this.each(function () {
@@ -52,7 +53,7 @@ jQuery.fn.extend({
 
 			$.ajax({
 				url: src,
-				dataType: 'html',
+				dataType: options.dataType,
 				beforeSend: function (xhr, settings) {
 					target.addLoading(options);
 					if (typeof options.beforeSend == 'function')
@@ -99,7 +100,8 @@ jQuery.fn.extend({
 			beforeSend: null,                       // ajax:beforeSend Callback function
 			success: null,                          // ajax:success Callback function
 			error: null,                            // ajax:error Callback function
-			complete: null                          // ajax:complete Callback function
+			complete: null,                         // ajax:complete Callback function
+      dataType: 'html'                        // Force a specific dataType
 		}, options);
 
 		this.filter('form').each(function () {
@@ -113,7 +115,7 @@ jQuery.fn.extend({
 
 				$.ajax({
 					url: src,
-					dataType: 'html',
+          dataType: options.dataType,
 					type: type,
 					data: form.serialize(),
 					beforeSend: function (xhr, settings) {
